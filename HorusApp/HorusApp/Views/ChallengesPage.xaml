@@ -1,0 +1,178 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="HorusApp.Views.ChallengesPage"
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:ios="clr-namespace:Xamarin.Forms.PlatformConfiguration.iOSSpecific;assembly=Xamarin.Forms.Core"
+    xmlns:models="clr-namespace:HorusApp.Models"
+    xmlns:prism="http://prismlibrary.com"
+    xmlns:vm="clr-namespace:HorusApp.ViewModels"
+    ios:Page.UseSafeArea="True"
+    prism:ViewModelLocator.AutowireViewModel="True"
+    x:DataType="vm:ChallengesPageViewModel"
+    BackgroundColor="{StaticResource GeneralBackgroundColor}"
+    NavigationPage.HasNavigationBar="False">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <Style x:Key="ChallengeListContainerStyle" TargetType="Frame">
+                <Setter Property="BackgroundColor" Value="{StaticResource GeneralBackgroundColor}" />
+                <Setter Property="Margin" Value="20,10,20,5" />
+                <Setter Property="Padding" Value="18" />
+                <Setter Property="CornerRadius" Value="20" />
+                <Setter Property="Visual" Value="Material" />
+            </Style>
+
+            <Style x:Key="TitlePageStyle" TargetType="Label">
+                <Setter Property="FontSize" Value="24" />
+                <Setter Property="TextColor" Value="{StaticResource DarkFontColor}" />
+                <Setter Property="FontAttributes" Value="Bold" />
+            </Style>
+
+            <Style x:Key="TitleListStyle" TargetType="Label">
+                <Setter Property="FontSize" Value="16" />
+                <Setter Property="TextColor" Value="{StaticResource DarkFontColor}" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="LineBreakMode" Value="TailTruncation" />
+            </Style>
+
+            <Style x:Key="BalanceChallengeStyle" TargetType="Label">
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="TextColor" Value="{StaticResource DarkFontColor}" />
+                <Setter Property="VerticalOptions" Value="End" />
+            </Style>
+
+            <Style x:Key="PercentageLabelStyle" TargetType="Label">
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="TextColor" Value="{StaticResource MainThemeFontColor}" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="LineBreakMode" Value="TailTruncation" />
+            </Style>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <Grid RowDefinitions="Auto,*">
+        <!--  Header  -->
+        <StackLayout Margin="20,20,20,0">
+            <Image HorizontalOptions="Start" Source="back_b">
+                <Image.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding LogoutCommand}" />
+                </Image.GestureRecognizers>
+            </Image>
+            <Grid ColumnDefinitions="*,Auto">
+                <Label Style="{StaticResource TitlePageStyle}" Text="Retos" />
+                <Label Grid.Column="1" Style="{StaticResource BalanceChallengeStyle}">
+                    <Label.FormattedText>
+                        <FormattedString>
+                            <Span Text="{Binding CompletedChallenges}" TextColor="{StaticResource MainThemeFontColor}" />
+                            <Span Text="/" />
+                            <Span Text="{Binding TotalChalleges}" />
+                        </FormattedString>
+                    </Label.FormattedText>
+                </Label>
+            </Grid>
+        </StackLayout>
+        <!--  Content  -->
+        <ListView
+            Grid.Row="1"
+            ItemsSource="{Binding Challenges}"
+            Style="{StaticResource GeneralListViewStyle}">
+            <ListView.ItemTemplate>
+                <DataTemplate x:DataType="models:Challenge">
+                    <ViewCell>
+                        <Frame Style="{StaticResource ChallengeListContainerStyle}">
+                            <StackLayout Spacing="10">
+                                <!--  Title  -->
+                                <Grid ColumnDefinitions="*,Auto">
+                                    <Label Style="{StaticResource TitleListStyle}" Text="{Binding Title}">
+                                        <Label.Triggers>
+                                            <DataTrigger
+                                                Binding="{Binding CompletePercentage}"
+                                                TargetType="Label"
+                                                Value="100">
+                                                <Setter Property="TextColor" Value="{StaticResource LightFontColor}" />
+                                            </DataTrigger>
+                                        </Label.Triggers>
+                                    </Label>
+                                    <Image Grid.Column="1" Source="arrow_right_g">
+                                        <Image.Triggers>
+                                            <DataTrigger
+                                                Binding="{Binding CompletePercentage}"
+                                                TargetType="Image"
+                                                Value="100">
+                                                <Setter Property="Source" Value="arrow_right_w" />
+                                            </DataTrigger>
+                                        </Image.Triggers>
+                                    </Image>
+                                </Grid>
+                                <!--  Description  -->
+                                <Label Style="{StaticResource GeneralLabelStyle}" Text="{Binding Description}">
+                                    <Label.Triggers>
+                                        <DataTrigger
+                                            Binding="{Binding CompletePercentage}"
+                                            TargetType="Label"
+                                            Value="100">
+                                            <Setter Property="TextColor" Value="{StaticResource LightFontColor}" />
+                                        </DataTrigger>
+                                    </Label.Triggers>
+                                </Label>
+                                <!--  Challenges status  -->
+                                <Grid ColumnDefinitions="*,Auto">
+                                    <Label Style="{StaticResource GeneralLabelStyle}" Text="{Binding ChallengeBalance}">
+                                        <Label.Triggers>
+                                            <DataTrigger
+                                                Binding="{Binding CompletePercentage}"
+                                                TargetType="Label"
+                                                Value="100">
+                                                <Setter Property="TextColor" Value="{StaticResource LightFontColor}" />
+                                            </DataTrigger>
+                                        </Label.Triggers>
+                                    </Label>
+                                    <!--  Percentage  -->
+                                    <Label
+                                        Grid.Column="1"
+                                        Style="{StaticResource PercentageLabelStyle}"
+                                        Text="{Binding CompletePercentage, StringFormat='{0}%'}">
+                                        <Label.Triggers>
+                                            <DataTrigger
+                                                Binding="{Binding CompletePercentage}"
+                                                TargetType="Label"
+                                                Value="100">
+                                                <Setter Property="TextColor" Value="{StaticResource LightFontColor}" />
+                                            </DataTrigger>
+                                        </Label.Triggers>
+                                    </Label>
+                                </Grid>
+                                <!--  ProgressBar  -->
+                                <ProgressBar
+                                    HeightRequest="5"
+                                    Progress="{Binding BarProgress}"
+                                    ProgressColor="{StaticResource MainThemeColor}">
+                                    <ProgressBar.Triggers>
+                                        <DataTrigger
+                                            Binding="{Binding CompletePercentage}"
+                                            TargetType="ProgressBar"
+                                            Value="100">
+                                            <Setter Property="ProgressColor" Value="{StaticResource GeneralBackgroundColor}" />
+                                        </DataTrigger>
+                                    </ProgressBar.Triggers>
+                                </ProgressBar>
+                            </StackLayout>
+                            <Frame.Triggers>
+                                <DataTrigger
+                                    Binding="{Binding CompletePercentage}"
+                                    TargetType="Frame"
+                                    Value="100">
+                                    <Setter Property="BackgroundColor" Value="{StaticResource MainThemeColor}" />
+                                </DataTrigger>
+                            </Frame.Triggers>
+                            <Frame.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type vm:ChallengesPageViewModel}}, Path=SelectChallegeCommand}" CommandParameter="{Binding}" />
+                            </Frame.GestureRecognizers>
+                        </Frame>
+                    </ViewCell>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+    </Grid>
+</ContentPage>

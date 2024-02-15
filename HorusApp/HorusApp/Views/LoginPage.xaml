@@ -1,0 +1,143 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="HorusApp.Views.LoginPage"
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:android="clr-namespace:Xamarin.Forms.PlatformConfiguration.AndroidSpecific;assembly=Xamarin.Forms.Core"
+    xmlns:controls="clr-namespace:HorusApp.Controls"
+    xmlns:ff="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
+    xmlns:fftransformations="clr-namespace:FFImageLoading.Transformations;assembly=FFImageLoading.Transformations"
+    xmlns:material="clr-namespace:Plugin.MaterialDesignControls.Material3;assembly=Plugin.MaterialDesignControls"
+    xmlns:prism="http://prismlibrary.com"
+    prism:ViewModelLocator.AutowireViewModel="True"
+    BackgroundColor="{StaticResource GeneralBackgroundColor}">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <Style x:Key="ContainerSocialMediaStyle" TargetType="Frame">
+                <Setter Property="BackgroundColor" Value="{StaticResource ShadowColor}" />
+                <Setter Property="Padding" Value="5" />
+                <Setter Property="CornerRadius" Value="22.5" />
+                <Setter Property="HasShadow" Value="False" />
+                <Setter Property="HeightRequest" Value="40" />
+                <Setter Property="WidthRequest" Value="40" />
+            </Style>
+            <Style x:Key="SocialMediaImageStyle" TargetType="Image">
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+            <Style x:Key="SeparatorStyle" TargetType="BoxView">
+                <Setter Property="HeightRequest" Value="1" />
+                <Setter Property="VerticalOptions" Value="Start" />
+                <Setter Property="Color" Value="#F5F5F5" />
+            </Style>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <Grid RowDefinitions="Auto,*">
+        <!--  Header  -->
+        <Grid>
+            <ff:CachedImage
+                Margin="0,-50,0,0"
+                Aspect="Fill"
+                Source="background">
+                <ff:CachedImage.Transformations>
+                    <fftransformations:CornersTransformation
+                        BottomLeftCornerSize="10"
+                        BottomRightCornerSize="10"
+                        CornersTransformType="BottomRounded" />
+                </ff:CachedImage.Transformations>
+            </ff:CachedImage>
+            <StackLayout
+                Margin="45,0,0,32"
+                Spacing="0"
+                VerticalOptions="End">
+                <Label
+                    FontSize="24"
+                    Text="Bienvenido a"
+                    TextColor="{StaticResource LightFontColor}" />
+                <Label
+                    FontAttributes="Bold"
+                    FontSize="50"
+                    Text="Horus"
+                    TextColor="{StaticResource LightFontColor}" />
+            </StackLayout>
+        </Grid>
+        <!--  Content  -->
+        <ScrollView Grid.Row="1" VerticalScrollBarVisibility="Never">
+            <StackLayout Margin="40,20" Spacing="10">
+                <Label Style="{StaticResource GeneralLabelStyle}" Text="Email" />
+                <!--  Email  -->
+                <Frame Style="{StaticResource ContainerEntryStyle}">
+                    <controls:ExtendedEntry
+                        Keyboard="Email"
+                        Style="{StaticResource GeneralEntryStyle}"
+                        Text="{Binding Email}" />
+                </Frame>
+                <Label Style="{StaticResource GeneralLabelStyle}" Text="Contraseña" />
+                <!--  Password  -->
+                <Frame Style="{StaticResource ContainerEntryStyle}">
+                    <Grid ColumnDefinitions="*,Auto">
+                        <controls:ExtendedEntry
+                            IsPassword="{Binding IsPassword}"
+                            Style="{StaticResource GeneralEntryStyle}"
+                            Text="{Binding Password}" />
+                        <Image Grid.Column="1" Source="eye_none_b">
+                            <Image.Triggers>
+                                <DataTrigger
+                                    Binding="{Binding IsPassword}"
+                                    TargetType="Image"
+                                    Value="true">
+                                    <Setter Property="Source" Value="eye_b" />
+                                </DataTrigger>
+                            </Image.Triggers>
+                            <Image.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding TogglePasswordVisibilityCommand}" />
+                            </Image.GestureRecognizers>
+                        </Image>
+                    </Grid>
+                </Frame>
+                <!--  Forgot Password  -->
+                <Label Style="{StaticResource GeneralLabelStyle}" Text="¿Olvidaste tu contraseña?">
+                    <Label.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding ShowMessageCommand}" CommandParameter="Olvido contraseña" />
+                    </Label.GestureRecognizers>
+                </Label>
+                <!--  Login  -->
+                <material:MaterialButton
+                    Margin="0,15,0,0"
+                    Command="{Binding LoginCommand}"
+                    Style="{StaticResource GeneralButtonStyle}"
+                    Text="Login" />
+                <StackLayout
+                    Margin="0,10"
+                    HorizontalOptions="Center"
+                    Orientation="Horizontal"
+                    Spacing="20">
+                    <Frame Style="{StaticResource ContainerSocialMediaStyle}">
+                        <Image Source="instagram_g" Style="{StaticResource SocialMediaImageStyle}" />
+                        <Frame.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding ShowMessageCommand}" CommandParameter="Instagram" />
+                        </Frame.GestureRecognizers>
+                    </Frame>
+                    <Frame Style="{StaticResource ContainerSocialMediaStyle}">
+                        <Image Source="facebook_g" Style="{StaticResource SocialMediaImageStyle}" />
+                        <Frame.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding ShowMessageCommand}" CommandParameter="Facebook" />
+                        </Frame.GestureRecognizers>
+                    </Frame>
+                </StackLayout>
+                <BoxView
+                    Margin="0,0,0,10"
+                    android:VisualElement.Elevation="0"
+                    Style="{StaticResource SeparatorStyle}" />
+                <!--  SignUp  -->
+                <material:MaterialButton
+                    Command="{Binding ShowMessageCommand}"
+                    CommandParameter="Registrarme"
+                    Style="{StaticResource OpaqueButtonStyle}"
+                    Text="Registrarme" />
+            </StackLayout>
+        </ScrollView>
+    </Grid>
+</ContentPage>
